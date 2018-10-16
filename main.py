@@ -1,5 +1,6 @@
 # import the pygame module, so you can use it
 import pygame
+import os
 
 SCREEN_WIDTH = 128
 SCREEN_HEIGHT  = 64
@@ -34,11 +35,21 @@ def select_mode(screen, selections, selected):
         text_start = [text_start[0], text_start[1] + font_height]
     pygame.display.update()
 
+def get_new_list(selected):
+    if selected == "LOAD SCHEDULE":
+        new_list = load_schedule()
+    return new_list
+
+def load_schedule():
+    schedules = os.listdir('schedules')
+    return schedules
+
 def main():
     running = True
     screen = init_screen() 
     selected = 0
-    select_mode(screen, HOME, selected)
+    item_list = HOME
+    select_mode(screen, item_list, selected)
     # main loop
     while running:
         # event handling, gets all event from the eventqueue
@@ -46,12 +57,15 @@ def main():
             # only do something if the event is of type QUIT
             print(event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if selected < len(HOME) - 1:
+                if selected < len(item_list) - 1:
                     selected = selected + 1
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 if selected > 0 :
-                    selected = selected - 1      
-            select_mode(screen, HOME, selected)
+                    selected = selected - 1   
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                screen = init_screen()
+                item_list = get_new_list(item_list[selected])
+            select_mode(screen, item_list, selected)
             if (event.type == pygame.QUIT):
                 # change the value to False, to exit the main loop
                 running = False

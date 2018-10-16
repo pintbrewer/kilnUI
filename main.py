@@ -38,6 +38,10 @@ def select_mode(screen, selections, selected):
 def get_new_list(selected):
     if selected == "LOAD SCHEDULE":
         new_list = load_schedule()
+    elif selected =="HOME":
+        new_list = HOME
+    elif selected == "NEW SCHEDULE":
+        new_list = display_schedule()
     return new_list
 
 def load_schedule():

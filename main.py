@@ -23,6 +23,7 @@ def select_mode(screen, selections, selected):
     #selections = ["LOAD SCHEDULE", "NEW SCHEDULE"]
     main_font = pygame.font.SysFont("menlo", 10)
     font_height = main_font.get_height()
+    max_lines = SCREEN_HEIGHT//font_height
     text_start = [2, 2]
     text = []
     for item in selections:
@@ -35,22 +36,31 @@ def select_mode(screen, selections, selected):
         text_start = [text_start[0], text_start[1] + font_height]
     pygame.display.update()
 
-def get_new_list(selected):
-    if selected == "LOAD SCHEDULE":
-        new_list = load_schedule()
-    elif selected =="HOME":
-        new_list = HOME
-    elif selected == "NEW SCHEDULE":
-        new_list = display_schedule()
-    return new_list
+def get_new_list(mode, selected):
+    if mode == "list_strings":
+        if selected == "LOAD SCHEDULE":
+            new_list = dir_schedules()
+            new_mode = "list_files"
+    elif mode == "list_files":
+        new_list = read_schedule("schedules/" + selected)
+        new_mode = "list_display"
+    return (new_mode, new_list)
 
-def load_schedule():
+def dir_schedules():
     schedules = os.listdir('schedules')
     return schedules
+
+def read_schedule(schedule_file):
+    lines = []
+    with open(schedule_file, "r") as f:
+        for line in f:
+            lines.append(line.rstrip())
+    return lines
 
 def main():
     running = True
     screen = init_screen() 
+    mode = "list_strings"
     selected = 0
     item_list = HOME
     select_mode(screen, item_list, selected)
@@ -59,7 +69,7 @@ def main():
         # event handling, gets all event from the eventqueue
         for event in pygame.event.get():
             # only do something if the event is of type QUIT
-            print(event)
+            print(mode, event)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
                 if selected < len(item_list) - 1:
                     selected = selected + 1
@@ -68,7 +78,7 @@ def main():
                     selected = selected - 1   
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 screen = init_screen()
-                item_list = get_new_list(item_list[selected])
+                (mode, item_list) = get_new_list(mode, item_list[selected])
             select_mode(screen, item_list, selected)
             if (event.type == pygame.QUIT):
                 # change the value to False, to exit the main loop

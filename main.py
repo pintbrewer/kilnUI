@@ -21,18 +21,28 @@ def init_screen():
 
 def select_mode(screen, selections, selected):
     #selections = ["LOAD SCHEDULE", "NEW SCHEDULE"]
+    init_screen()
     main_font = pygame.font.SysFont("menlo", 10)
     font_height = main_font.get_height()
-    max_lines = SCREEN_HEIGHT//font_height
     text_start = [2, 2]
+    max_lines = (SCREEN_HEIGHT - text_start[1])//font_height
+    print("max lines: " + str(max_lines))
     text = []
     for item in selections:
         if selected == selections.index(item):
             text.append(main_font.render(item, 1, black, white))
         else:
             text.append(main_font.render(item, 1, white, black))
-    for txt in text:
-        screen.blit(txt, text_start)
+    if (selected + 1) > max_lines:
+        start_index = (selected + 1) - max_lines
+        max_index = max_lines
+    else:
+        start_index = 0
+        max_index = len(selections) - 1
+    if max_index + 1 > max_lines:
+        max_index = start_index + (max_lines - 1)
+    for txt in range(start_index,max_index+1):
+        screen.blit(text[txt], text_start)
         text_start = [text_start[0], text_start[1] + font_height]
     pygame.display.update()
 

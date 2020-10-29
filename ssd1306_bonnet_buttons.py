@@ -81,27 +81,6 @@ draw = ImageDraw.Draw(image)
 # Draw a black filled box to clear the image.
 draw.rectangle((0, 0, width, height), outline=0, fill=0)
 
-class TextSelection(object):
-    """
-    TextSelection object will represent a screen of lines with one selected
-    """
-    def __init__(self, text_list):
-        self.text_list = text_list
-        self.selected = 0
-    
-    def display_list(self):
-        """
-        Display the number of text lines able to fit on the screen
-        """
-        for line in text_list:
-            if selected == display_list.index(line):
-                #write highlighted text
-                pass
-            else:
-                #write regular text
-                pass
-
-    
 
 while True:
     if button_U.value:  # button is released

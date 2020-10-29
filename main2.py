@@ -1,13 +1,12 @@
 # import the pygame module, so you can use it
 import pygame
 import os
-from time import sleep
 
 SCREEN_WIDTH = 128
 SCREEN_HEIGHT  = 64
 black = (0,0,0)
 white = (255,255,255)
-HOME = ["LOAD SCHEDULE", "NEW SCHEDULE"]
+back = 'Back'
 
 def init_screen():
     pygame.init()
@@ -20,8 +19,37 @@ def init_screen():
     pygame.display.update()
     return screen
 
-def select_mode(screen, selections, selected):
-    #selections = ["LOAD SCHEDULE", "NEW SCHEDULE"]
+def get_menu_items(menu, mode):
+    if menu == 'HOME':
+        menu_items = ["LOAD SCHEDULE", "NEW SCHEDULE"]
+    if menu == "LOAD SCHEDULE":
+        menu_items = os.listdir('schedules')
+        menu_items.append(back)
+    if menu == 'DISPLAY SCHEDULE':
+        menu_items = ["TEMP,RATE,TIME"]
+    if menu == "NEW SCHEDULE":
+        pass
+    return (menu_items, mode)
+
+def process_choice(menu, item):
+    if menu == 'HOME' and item == 'LOAD SCHEDULE':
+        new_menu = 'LOAD SCHEDULE'
+    if menu == "HOME" and item == 'NEW SCHEDULE':
+        new_menu = 'NEW SCHEDULE'
+    if menu == 'LOAD SCHEDULE' and item == back:
+        new_menu = 'HOME'
+    if menu == 'LOAD SCHEDULE' and item != back:
+        new_menu = 'DISPLAY SCHEDULE'
+    return new_menu
+
+def read_schedule(schedule_file):
+    lines = []
+    with open(schedule_file, "r") as f:
+        for line in f:
+            lines.append(line.rstrip())
+    return lines
+
+def display_selections(screen, selections, selected):
     init_screen()
     main_font = pygame.font.SysFont("menlo", 10)
     font_height = main_font.get_height()
@@ -47,71 +75,32 @@ def select_mode(screen, selections, selected):
         text_start = [text_start[0], text_start[1] + font_height]
     pygame.display.update()
 
-def get_new_list(mode, selected):
-    if mode == "list_strings":
-        if selected == "LOAD SCHEDULE":
-            new_list = dir_schedules()
-            new_list.append('Back')
-            new_mode = "list_files"
-    elif mode == "list_files" and selected == "Back":
-        new_list = HOME
-        new_mode = "list_strings"
-    elif mode == "list_files" and selected != "Back":
-        new_list = read_schedule("schedules/" + selected)
-        new_list.append('Start')
-        new_list.append('Back')
-        new_mode = "list_display"
-    elif mode == "list_display" and selected == "Back":
-        new_list = dir_schedules()
-        new_list.append('Back')
-        new_mode = "list_files"
-    elif mode == "list_display" and selected == "Start":
-        new_list = ["starting"]
-    
-        new_mode = "list_strings"
-    return (new_mode, new_list)
-
-def dir_schedules():
-    schedules = os.listdir('schedules')
-    return schedules
-
-def read_schedule(schedule_file):
-    lines = []
-    with open(schedule_file, "r") as f:
-        for line in f:
-            lines.append(line.rstrip())
-    return lines
-
 def main():
     running = True
     screen = init_screen() 
-    mode = "list_strings"
+    menu = "HOME"
     selected = 0
-    item_list = HOME
-    select_mode(screen, item_list, selected)
-    clock = pygame.time.Clock()
     # main loop
     while running:
-        time_delta = clock.tick(60)/1000.0
         # event handling, gets all event from the eventqueue
         for event in pygame.event.get():
             # only do something if the event is of type QUIT
             #print(mode, event)
+            (menu_items, mode) = get_menu_items(menu, mode)
             if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
-                if selected < len(item_list) - 1:
+                if selected < len(menu_items) - 1:
                     selected = selected + 1
             if event.type == pygame.KEYDOWN and event.key == pygame.K_UP:
                 if selected > 0 :
                     selected = selected - 1   
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 screen = init_screen()
-                (mode, item_list) = get_new_list(mode, item_list[selected])
+                menu = process_choice(menu, menu_items[selected])
                 selected = 0
-            select_mode(screen, item_list, selected)
+            display_selections(screen, menu_items, selected)
             if (event.type == pygame.QUIT):
                 # change the value to False, to exit the main loop
                 running = False
-            sleep(time_delta) 
      
 
 # run the main function only if this module is executed as the main script

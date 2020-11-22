@@ -27,21 +27,33 @@ class Menu(object):
         self.drawing = ImageDraw.Draw(self.canvas)
         self.wipe_canvas()
         self.draw_text()
+        self.screen_start = 0
 
     def draw_text(self):
         """
         docstring
         """
         start = 0
+        space = 4
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 10)
         txt_ht = (self.drawing.textsize('A', font=font))[1]
+        max_lines = self.height//(txt_ht + space)
+        screen_end = max_lines - 1 + self.screen_start
+        
         for index, line in enumerate(self.txt_lst):
+            if self.screen_start > index:
+                continue
+            if index > screen_end:
+                self.screen_start = self.screen_start + 1
+                break
             self.drawing.text((10,start), line, font=font, fill=1)
             if index == self.selected:
                 self.drawing.polygon([(0,start),
                                       (6,start + (txt_ht//2)),
                                       (0,start + txt_ht)],fill=1, outline=1)
-            start = start + txt_ht + 4
+            start = start + txt_ht + space
+
+
 
         #max_lines = (display.height - text_start[1])//font_ht
 
@@ -54,6 +66,6 @@ class Menu(object):
 width = disp.width
 height = disp.height
 
-home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height), selected=1)
+home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height))
 disp.image(home_menu.canvas)
 disp.show() 

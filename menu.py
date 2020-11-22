@@ -22,12 +22,13 @@ class Menu(object):
         self.width = screen_sz[0]
         self.height = screen_sz[1]
         self.selected = selected or 0
+        self.screen_start = 0
         self.canvas = Image.new('1', (self.width, 
                                      self.height))
         self.drawing = ImageDraw.Draw(self.canvas)
         self.wipe_canvas()
         self.draw_text()
-        self.screen_start = 0
+        
 
     def draw_text(self):
         """

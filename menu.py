@@ -33,7 +33,7 @@ class Menu(object):
         docstring
         """
         start = 0
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 14)
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 10)
         txt_ht = (self.drawing.textsize('A', font=font))[1]
         for line in self.txt_lst:
             self.drawing.text((0,start), line, font=font, fill=1)

@@ -45,7 +45,6 @@ class Menu(object):
             if self.screen_start > index:
                 continue
             if index > screen_end:
-                self.screen_start = self.screen_start + 1
                 break
             self.drawing.text((10,start), line, font=font, fill=1)
             if index == self.selected:
@@ -61,6 +60,18 @@ class Menu(object):
     def wipe_canvas(self):
         self.drawing.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
+    def inc_selected(self):
+        self.selected == (len(self.txt_lst)-1 or self.selected = self.selected + 1
+        self.wipe_canvas()
+        self.draw_text()
+
+    def dec_selected(self):
+        """
+        docstring
+        """
+        self.selected == 0 or = self.selected - 1
+        self.wipe_canvas()
+        self.draw_text()
 
 # Create blank image for drawing.
 # Make sure to create image with mode '1' for 1-bit color.

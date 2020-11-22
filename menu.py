@@ -61,7 +61,8 @@ class Menu(object):
         self.drawing.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
     def inc_selected(self):
-        self.selected == (len(self.txt_lst)-1) or self.selected = self.selected + 1
+        if self.selected < len(self.txt_lst) - 1:
+            self.selected = self.selected + 1
         self.wipe_canvas()
         self.draw_text()
 
@@ -69,7 +70,8 @@ class Menu(object):
         """
         docstring
         """
-        self.selected == 0 or self.selected = self.selected - 1
+        if self.selected > 0:
+            self.selected = self.selected - 1
         self.wipe_canvas()
         self.draw_text()
 

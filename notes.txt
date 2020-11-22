@@ -1,0 +1,10 @@
+Lines of test for input
+Need to know number of lines that can fit on screen
+need to know which line is selected
+draw the lines of text that fit wit the selected indicator
+Increment or decrement which line is selected
+
+object called Menu
+parameters: text list, screen size, optional selected item
+Attributes: selected item, image
+Methods: get_image, increment_selected, decrement_selected

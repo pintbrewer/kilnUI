@@ -19,11 +19,13 @@ class Menu(object):
     """
     def __init__(self, txt_lst, screen_sz=(128, 64), selected=None):
         self.txt_lst = txt_lst
-        self.screen_sz = screen_sz
+        self.width = screen_sz[0]
+        self.height = screen_sz[1]
         self.selected = selected or 0
-        self.canvas = Image.new('1', (self.screen_sz[0], 
-                                     self.screen_sz[1]))
+        self.canvas = Image.new('1', (self.width, 
+                                     self.height))
         self.drawing = ImageDraw.Draw(self.canvas)
+        self.wipe_canvas()
         self.draw_text()
 
     def draw_text(self):
@@ -35,8 +37,11 @@ class Menu(object):
         txt_ht = (self.drawing.textsize('A', font=font))[1]
         for line in self.txt_lst:
             self.drawing.text((0,start), line, font=font, fill=1)
-            start = start + txt_ht
+            start = start + txt_ht + 1
         #max_lines = (display.height - text_start[1])//font_ht
+
+    def wipe_canvas(self):
+        self.drawing.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
 
 # Create blank image for drawing.

@@ -33,10 +33,12 @@ button_R.pull = Pull.UP
 button_U = DigitalInOut(board.D17)
 button_U.direction = Direction.INPUT
 button_U.pull = Pull.UP
+U_pressed = False
 
 button_D = DigitalInOut(board.D22)
 button_D.direction = Direction.INPUT
 button_D.pull = Pull.UP
+D_pressed = False
 
 button_C = DigitalInOut(board.D4)
 button_C.direction = Direction.INPUT

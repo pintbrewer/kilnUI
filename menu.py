@@ -23,6 +23,7 @@ class Menu(object):
         self.height = screen_sz[1]
         self.selected = selected or 0
         self.screen_start = 0
+        self.screen_end = 1
         self.canvas = Image.new('1', (self.width, 
                                      self.height))
         self.drawing = ImageDraw.Draw(self.canvas)
@@ -39,12 +40,12 @@ class Menu(object):
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 10)
         txt_ht = (self.drawing.textsize('A', font=font))[1]
         max_lines = self.height//(txt_ht + space)
-        screen_end = max_lines - 1 + self.screen_start
+        self.screen_end = max_lines - 1 + self.screen_start
         
         for index, line in enumerate(self.txt_lst):
             if self.screen_start > index:
                 continue
-            if index > screen_end:
+            if index > self.screen_end:
                 break
             self.drawing.text((10,start), line, font=font, fill=1)
             if index == self.selected:
@@ -53,16 +54,15 @@ class Menu(object):
                                       (0,start + txt_ht)],fill=1, outline=1)
             start = start + txt_ht + space
 
-
-
-        #max_lines = (display.height - text_start[1])//font_ht
-
     def wipe_canvas(self):
         self.drawing.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
     def inc_selected(self):
         if self.selected < len(self.txt_lst) - 1:
-            self.selected = self.selected + 1
+            self.selected += 1
+            if self.selected > self.screen_end:
+                self.screen_start += 1
+                self.screen_end += 1
         self.wipe_canvas()
         self.draw_text()
 
@@ -71,7 +71,10 @@ class Menu(object):
         docstring
         """
         if self.selected > 0:
-            self.selected = self.selected - 1
+            self.selected -= 1
+            if self.selected < self.screen_start:
+                self.screen_start -= 1
+                self.screen_end -= 1
         self.wipe_canvas()
         self.draw_text()
 

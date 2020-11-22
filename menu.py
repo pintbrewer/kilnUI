@@ -13,6 +13,35 @@ disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 disp.fill(0)
 disp.show()
 
+# Input pins:
+button_A = DigitalInOut(board.D5)
+button_A.direction = Direction.INPUT
+button_A.pull = Pull.UP
+
+button_B = DigitalInOut(board.D6)
+button_B.direction = Direction.INPUT
+button_B.pull = Pull.UP
+
+button_L = DigitalInOut(board.D27)
+button_L.direction = Direction.INPUT
+button_L.pull = Pull.UP
+
+button_R = DigitalInOut(board.D23)
+button_R.direction = Direction.INPUT
+button_R.pull = Pull.UP
+
+button_U = DigitalInOut(board.D17)
+button_U.direction = Direction.INPUT
+button_U.pull = Pull.UP
+
+button_D = DigitalInOut(board.D22)
+button_D.direction = Direction.INPUT
+button_D.pull = Pull.UP
+
+button_C = DigitalInOut(board.D4)
+button_C.direction = Direction.INPUT
+button_C.pull = Pull.UP
+
 class Menu(object):
     """
     docstring
@@ -33,7 +62,9 @@ class Menu(object):
 
     def draw_text(self):
         """
-        docstring
+        Draw the text, skipping anything that is our of range of the available
+        lines on the screen
+        Draw a triangle next to the selected item
         """
         start = 0
         space = 4
@@ -55,9 +86,16 @@ class Menu(object):
             start = start + txt_ht + space
 
     def wipe_canvas(self):
+        '''
+        just draw a black square to clear the screen
+        '''
         self.drawing.rectangle((0, 0, self.width, self.height), outline=0, fill=0)
 
     def inc_selected(self):
+        '''
+        Increment the selected item by one until max items
+        adjust the list start and end attributes if scrolling
+        '''
         if self.selected < len(self.txt_lst) - 1:
             self.selected += 1
             if self.selected > self.screen_end:
@@ -68,7 +106,8 @@ class Menu(object):
 
     def dec_selected(self):
         """
-        docstring
+        Decrement the selected item by one until max items
+        adjust the list start and end attributes if scrolling
         """
         if self.selected > 0:
             self.selected -= 1
@@ -84,5 +123,10 @@ width = disp.width
 height = disp.height
 
 home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height))
-disp.image(home_menu.canvas)
-disp.show() 
+while True:
+    if button_U.value:  # button is released
+        home_menu.dec_selected()
+    if button_D.value:
+        home_menu.inc_selected()
+    disp.image(home_menu.canvas)
+    disp.show()

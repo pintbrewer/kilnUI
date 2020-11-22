@@ -36,12 +36,12 @@ class Menu(object):
         font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 10)
         txt_ht = (self.drawing.textsize('A', font=font))[1]
         for index, line in enumerate(self.txt_lst):
-            self.drawing.text((8,start), line, font=font, fill=1)
+            self.drawing.text((10,start), line, font=font, fill=1)
             if index == self.selected:
                 self.drawing.polygon([(0,start),
                                       (6,start + (txt_ht//2)),
                                       (0,start + txt_ht)],fill=1, outline=1)
-            start = start + txt_ht + 1
+            start = start + txt_ht + 4
 
         #max_lines = (display.height - text_start[1])//font_ht
 
@@ -54,6 +54,6 @@ class Menu(object):
 width = disp.width
 height = disp.height
 
-home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height))
+home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height), selected=1)
 disp.image(home_menu.canvas)
 disp.show() 

@@ -125,8 +125,18 @@ height = disp.height
 home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height))
 while True:
     if button_U.value:  # button is released
-        home_menu.dec_selected()
+        if U_pressed:
+            home_menu.dec_selected()
+            U_pressed = False
+    else: # button pressed
+        U_pressed = True
+    
     if button_D.value:
-        home_menu.inc_selected()
+        if D_pressed:
+            home_menu.inc_selected()
+            D_pressed = False
+    else:
+        D_pressed = True
+    
     disp.image(home_menu.canvas)
     disp.show()

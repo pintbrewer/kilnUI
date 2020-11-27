@@ -15,21 +15,21 @@ disp.fill(0)
 disp.show()
 
 # Input pins:
-button_A = DigitalInOut(board.D5)
-button_A.direction = Direction.INPUT
-button_A.pull = Pull.UP
+# button_A = DigitalInOut(board.D5)
+# button_A.direction = Direction.INPUT
+# button_A.pull = Pull.UP
 
-button_B = DigitalInOut(board.D6)
-button_B.direction = Direction.INPUT
-button_B.pull = Pull.UP
+# button_B = DigitalInOut(board.D6)
+# button_B.direction = Direction.INPUT
+# button_B.pull = Pull.UP
 
-button_L = DigitalInOut(board.D27)
-button_L.direction = Direction.INPUT
-button_L.pull = Pull.UP
+# button_L = DigitalInOut(board.D27)
+# button_L.direction = Direction.INPUT
+# button_L.pull = Pull.UP
 
-button_R = DigitalInOut(board.D23)
-button_R.direction = Direction.INPUT
-button_R.pull = Pull.UP
+# button_R = DigitalInOut(board.D23)
+# button_R.direction = Direction.INPUT
+# button_R.pull = Pull.UP
 
 button_U = DigitalInOut(board.D17)
 button_U.direction = Direction.INPUT
@@ -133,7 +133,7 @@ class Mode(object):
     def change(self, select):
         print(self.mode + ' : ' + select)
         if self.mode == 'home' and select == 'LOAD_SCHEDULE':
-            self.menu = self.get_files()
+            self.menu = self._get_files()
             self.menu.append('Back')
             self.mode = 'disp_files'
         elif self.mode == 'disp_files' and select == 'Back':
@@ -141,7 +141,7 @@ class Mode(object):
             self.menu = self.HOME
         elif self.mode == 'disp_files' and select != 'Back':
             self.mode = 'disp_schedule'
-            self.menu = self.read_schedule(select)
+            self.menu = self._read_schedule(select)
             self.menu.extend(['START_SCHEDULE', 'Back'])
         elif self.mode == 'disp_schedule' and select == 'Back':
             self.mode = 'home'
@@ -151,49 +151,59 @@ class Mode(object):
             self.mode = 'home'
             self.menu = self.HOME
     
-    def get_files(self):
+    @staticmethod
+    def _get_files():
         schedules = os.listdir('schedules')
         return schedules
     
-    def read_schedule(self, schedule_file):
+    @staticmethod
+    def _read_schedule(schedule_file):
         lines = []
         with open('schedules/' + schedule_file, "r") as f:
             for line in f:
                 lines.append(line.rstrip())
         return lines
 
-# Create blank image for drawing.
-# Make sure to create image with mode '1' for 1-bit color.
-width = disp.width
-height = disp.height
+
+def main():
+    # Create blank image for drawing.
+    # Make sure to create image with mode '1' for 1-bit color.
+    width = disp.width
+    height = disp.height
 
 
-mode = Mode()
-menu = Menu(mode.menu, screen_sz=(width, height))
+    mode = Mode()
+    menu = Menu(mode.menu, screen_sz=(width, height))
 
-while True:
-    if button_U.value:  # button is released
-        if U_pressed:
-            menu.dec_selected()
-            U_pressed = False
-    else: # button pressed
-        U_pressed = True
-    
-    if button_D.value:
-        if D_pressed:
-            menu.inc_selected()
-            D_pressed = False
-    else:
-        D_pressed = True
-    
-    if button_C.value:
-        if C_pressed:
-            mode.change(menu.txt_lst[menu.selected])
-            menu = Menu(mode.menu)
-            C_pressed = False
-    else:
-        C_pressed = True
+    while True:
+        if button_U.value:  # button is released
+            if U_pressed:
+                menu.dec_selected()
+                U_pressed = False
+        else: # button pressed
+            U_pressed = True
+        
+        if button_D.value:
+            if D_pressed:
+                menu.inc_selected()
+                D_pressed = False
+        else:
+            D_pressed = True
+        
+        if button_C.value:
+            if C_pressed:
+                mode.change(menu.txt_lst[menu.selected])
+                menu = Menu(mode.menu)
+                C_pressed = False
+        else:
+            C_pressed = True
 
-    
-    disp.image(menu.canvas)
-    disp.show()
+        
+        disp.image(menu.canvas)
+        disp.show()
+
+# run the main function only if this module is executed as the main script
+# (if you import this as a module then nothing is executed)
+if __name__=="__main__":
+    # call the main function
+    main()

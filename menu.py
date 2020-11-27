@@ -157,7 +157,7 @@ class Mode(object):
     
     def read_schedule(self, schedule_file):
         lines = []
-        with open(schedule_file, "r") as f:
+        with open('schedules/' + schedule_file, "r") as f:
             for line in f:
                 lines.append(line.rstrip())
         return lines

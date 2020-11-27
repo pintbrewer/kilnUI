@@ -43,6 +43,7 @@ D_pressed = False
 button_C = DigitalInOut(board.D4)
 button_C.direction = Direction.INPUT
 button_C.pull = Pull.UP
+C_pressed = False
 
 class Menu(object):
     """
@@ -139,6 +140,14 @@ while True:
             D_pressed = False
     else:
         D_pressed = True
+    
+    if button_C.value:
+        if C_pressed:
+            print(home_menu.txt_lst[home_menu.selected])
+            C_pressed = False
+    else:
+        C_pressed = True
+
     
     disp.image(home_menu.canvas)
     disp.show()

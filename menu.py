@@ -5,46 +5,7 @@ from digitalio import DigitalInOut, Direction, Pull
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_ssd1306
 
-# Create the I2C interface.
-i2c = busio.I2C(board.SCL, board.SDA)
-# Create the SSD1306 OLED class.
-disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
 
-# Clear display.
-disp.fill(0)
-disp.show()
-
-# Input pins:
-# button_A = DigitalInOut(board.D5)
-# button_A.direction = Direction.INPUT
-# button_A.pull = Pull.UP
-
-# button_B = DigitalInOut(board.D6)
-# button_B.direction = Direction.INPUT
-# button_B.pull = Pull.UP
-
-# button_L = DigitalInOut(board.D27)
-# button_L.direction = Direction.INPUT
-# button_L.pull = Pull.UP
-
-# button_R = DigitalInOut(board.D23)
-# button_R.direction = Direction.INPUT
-# button_R.pull = Pull.UP
-
-button_U = DigitalInOut(board.D17)
-button_U.direction = Direction.INPUT
-button_U.pull = Pull.UP
-U_pressed = False
-
-button_D = DigitalInOut(board.D22)
-button_D.direction = Direction.INPUT
-button_D.pull = Pull.UP
-D_pressed = False
-
-button_C = DigitalInOut(board.D4)
-button_C.direction = Direction.INPUT
-button_C.pull = Pull.UP
-C_pressed = False
 
 class Menu(object):
     """
@@ -166,6 +127,47 @@ class Mode(object):
 
 
 def main():
+    # Create the I2C interface.
+    i2c = busio.I2C(board.SCL, board.SDA)
+    # Create the SSD1306 OLED class.
+    disp = adafruit_ssd1306.SSD1306_I2C(128, 64, i2c)
+
+    # Clear display.
+    disp.fill(0)
+    disp.show()
+
+    # Input pins:
+    # button_A = DigitalInOut(board.D5)
+    # button_A.direction = Direction.INPUT
+    # button_A.pull = Pull.UP
+
+    # button_B = DigitalInOut(board.D6)
+    # button_B.direction = Direction.INPUT
+    # button_B.pull = Pull.UP
+
+    # button_L = DigitalInOut(board.D27)
+    # button_L.direction = Direction.INPUT
+    # button_L.pull = Pull.UP
+
+    # button_R = DigitalInOut(board.D23)
+    # button_R.direction = Direction.INPUT
+    # button_R.pull = Pull.UP
+
+    button_U = DigitalInOut(board.D17)
+    button_U.direction = Direction.INPUT
+    button_U.pull = Pull.UP
+    U_pressed = False
+
+    button_D = DigitalInOut(board.D22)
+    button_D.direction = Direction.INPUT
+    button_D.pull = Pull.UP
+    D_pressed = False
+
+    button_C = DigitalInOut(board.D4)
+    button_C.direction = Direction.INPUT
+    button_C.pull = Pull.UP
+    C_pressed = False
+    
     # Create blank image for drawing.
     # Make sure to create image with mode '1' for 1-bit color.
     width = disp.width

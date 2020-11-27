@@ -1,3 +1,4 @@
+import os
 import board
 import busio
 from digitalio import DigitalInOut, Direction, Pull
@@ -120,34 +121,78 @@ class Menu(object):
         self.wipe_canvas()
         self.draw_text()
 
+class Mode(object):
+    """
+    docstring
+    """
+    def __init__(self):
+        self.mode = 'home'
+        self.HOME = ['LOAD_SCHEDULE', 'NEW_SCHEDULE']
+        self.menu = self.HOME
+
+    def change(self, select):
+        if self.mode == 'home' and select == 'LOAD_SCHEDULE':
+            self.mode = 'disp_files'
+            self.menu = self.get_files()
+            self.menu.append('Back')
+        if self.mode == 'disp_files' and select == 'Back':
+            self.mode = 'home'
+            self.menu = self.HOME
+        elif self.mode == 'disp_files':
+            self.mode = 'disp_schedule'
+            self.menu = self.read_schedule(select)
+            self.menu.extend(['START_SCHEDULE', 'Back'])
+        if self.mode == 'disp_schedule' and select == 'Back':
+            self.mode = 'home'
+            self.menu = self.HOME
+        elif self.mode == 'disp_schedule' and select == 'START_SCHEDULE':
+            print('starting schedule')
+            self.mode = 'home'
+            self.menu = self.HOME
+    
+    def get_files(self):
+        schedules = os.listdir('schedules')
+        return schedules
+    
+    def read_schedule(self, schedule_file):
+        lines = []
+        with open(schedule_file, "r") as f:
+            for line in f:
+                lines.append(line.rstrip())
+        return lines
+
 # Create blank image for drawing.
 # Make sure to create image with mode '1' for 1-bit color.
 width = disp.width
 height = disp.height
 
-home_menu = Menu(['LOAD_SCHEDULE', 'NEW_SCHEDULE'], screen_sz=(width, height))
+
+mode = Mode()
+menu = Menu(mode.mode, screen_sz=(width, height))
+
 while True:
     if button_U.value:  # button is released
         if U_pressed:
-            home_menu.dec_selected()
+            menu.dec_selected()
             U_pressed = False
     else: # button pressed
         U_pressed = True
     
     if button_D.value:
         if D_pressed:
-            home_menu.inc_selected()
+            menu.inc_selected()
             D_pressed = False
     else:
         D_pressed = True
     
     if button_C.value:
         if C_pressed:
-            print(home_menu.txt_lst[home_menu.selected])
+            mode.change(menu.txt_lst[menu.selected])
+            menu = Menu(mode.menu)
             C_pressed = False
     else:
         C_pressed = True
 
     
-    disp.image(home_menu.canvas)
+    disp.image(menu.canvas)
     disp.show()

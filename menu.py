@@ -168,7 +168,7 @@ height = disp.height
 
 
 mode = Mode()
-menu = Menu(mode.mode, screen_sz=(width, height))
+menu = Menu(mode.menu, screen_sz=(width, height))
 
 while True:
     if button_U.value:  # button is released

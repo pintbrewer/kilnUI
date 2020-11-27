@@ -131,10 +131,11 @@ class Mode(object):
         self.menu = self.HOME
 
     def change(self, select):
+        print(self.mode + ' : ' + select)
         if self.mode == 'home' and select == 'LOAD_SCHEDULE':
-            self.mode = 'disp_files'
             self.menu = self.get_files()
             self.menu.append('Back')
+            self.mode = 'disp_files'
         if self.mode == 'disp_files' and select == 'Back':
             self.mode = 'home'
             self.menu = self.HOME

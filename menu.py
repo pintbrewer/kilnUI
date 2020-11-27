@@ -136,14 +136,14 @@ class Mode(object):
             self.menu = self.get_files()
             self.menu.append('Back')
             self.mode = 'disp_files'
-        if self.mode == 'disp_files' and select == 'Back':
+        elif self.mode == 'disp_files' and select == 'Back':
             self.mode = 'home'
             self.menu = self.HOME
-        elif self.mode == 'disp_files':
+        elif self.mode == 'disp_files' and select != 'Back':
             self.mode = 'disp_schedule'
             self.menu = self.read_schedule(select)
             self.menu.extend(['START_SCHEDULE', 'Back'])
-        if self.mode == 'disp_schedule' and select == 'Back':
+        elif self.mode == 'disp_schedule' and select == 'Back':
             self.mode = 'home'
             self.menu = self.HOME
         elif self.mode == 'disp_schedule' and select == 'START_SCHEDULE':
